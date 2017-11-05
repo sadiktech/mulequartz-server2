@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:quartz="http://www.mulesoft.org/schema/mule/quartz" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/quartz http://www.mulesoft.org/schema/mule/quartz/current/mule-quartz.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="${http.port}" doc:name="HTTP Listener Configuration"/>
+    <flow name="mulequartz-server2Flow">
+        <quartz:inbound-endpoint jobName="EXPIRESVALINKED"
+			doc:name="Quartz" cronExpression="${expire.cron.expression}">
+			<quartz:event-generator-job>
+				<quartz:payload>tick-tock</quartz:payload>
+			</quartz:event-generator-job>
+		</quartz:inbound-endpoint>
+        <logger level="INFO" doc:name="Logger" message="This is quartz 2 for Testing only !!"/>
+    </flow>
+    <flow name="mulequartz-server2Flow1">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/quartz2" allowedMethods="GET" doc:name="HTTP"/>
+        <set-payload value="#[&quot;This is quartz 2 for Testing only !!&quot;]" doc:name="Set Payload"/>
+    </flow>
+
+
+
+</mule>
